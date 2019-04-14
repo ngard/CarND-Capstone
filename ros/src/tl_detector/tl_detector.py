@@ -11,6 +11,8 @@ import tf
 import cv2
 import yaml
 from scipy.spatial import KDTree
+import numpy as np
+from datetime import datetime
 
 STATE_COUNT_THRESHOLD = 3
 
@@ -23,7 +25,9 @@ class TLDetector(object):
         self.waypoints_2d = None
         self.waypoint_tree = None
         self.camera_image = None
+        self.save_image = False
         self.lights = []
+        self.bridge = CvBridge
 
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
@@ -76,6 +80,11 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
+        if self.save_image:
+            image_data = self.bridge.imgmsg_to_cv2(self.camera_image, desired_encoding="bgr8")
+            fname = "image/" + datetime.now().strftime("%Y%m%d-%H:%M:%S.%f") + ".png"
+            cv2.imwrite(fname, image_data)
+
         light_wp, state = self.process_traffic_lights()
 
         '''
