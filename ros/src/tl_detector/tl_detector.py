@@ -16,6 +16,8 @@ from datetime import datetime
 
 STATE_COUNT_THRESHOLD = 3
 
+kREMOTENESS_TO_WAYPOINTS = 22
+
 class TLDetector(object):
     def __init__(self):
         rospy.init_node('tl_detector')
@@ -159,20 +161,10 @@ class TLDetector(object):
             if car_wp_idx is None:
                 -1, TrafficLight.UNKNOWN
 
-            #TODO find the closest visible traffic light (if one exists)
-            diff = len(self.waypoints.waypoints)
-            for i, light in enumerate(self.lights):
-                line = stop_line_positions[i]
-                temp_wp_idx = self.get_closest_waypoint(line[0], line[1])
-                d = temp_wp_idx - car_wp_idx
-                if d >= 0 and d < diff:
-                    diff = d
-                    closest_light = light
-                    line_wp_idx = temp_wp_idx
-
-        if closest_light:
             state, remoteness = self.get_light_state()
-            return line_wp_idx, state
+            stop_wp_idx = car_wp_idx+remoteness * kREMOTENESS_TO_WAYPOINTS
+            rospy.loginfo("carwp_idx = %d, stop_idx = %d", car_wp_idx, stop_wp_idx)
+            return stop_wp_idx, state
 
         return -1, TrafficLight.UNKNOWN
 
