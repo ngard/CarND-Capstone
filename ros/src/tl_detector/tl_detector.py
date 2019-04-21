@@ -16,7 +16,7 @@ from datetime import datetime
 
 STATE_COUNT_THRESHOLD = 3
 
-kREMOTENESS_TO_WAYPOINTS = 22
+kREMOTENESS_TO_WAYPOINTS = 25
 
 class TLDetector(object):
     def __init__(self):
