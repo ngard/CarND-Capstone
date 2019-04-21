@@ -137,7 +137,11 @@ class WaypointUpdater(object):
         dist = 0
         dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2)
         for i in range(wp1, wp2+1):
-            dist += dl(waypoints[wp1].pose.pose.position, waypoints[i].pose.pose.position)
+            try:
+                dist += dl(waypoints[wp1].pose.pose.position, waypoints[i].pose.pose.position)
+            except:
+                rospy.logerr("failed to calcurate waypoints distance when wp1 = %d and wp2 = %d", wp1, wp2)
+                return dist
             wp1 = i
         return dist
 
