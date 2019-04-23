@@ -135,7 +135,7 @@ class TLClassifier(object):
         height = image_bgr.shape[0]
 
         nearest_tl_width = 0
-        nearest_tl_color = TrafficLight.UNKNOWN
+        nearest_tl_state = TrafficLight.UNKNOWN
 
         for i in range(top_conf.shape[0]):
             xmin = int(round(top_xmin[i] * width))
@@ -149,14 +149,23 @@ class TLClassifier(object):
             label_name = self.voc_classes[label]
 
             if label == 0:
-                nearest_tl_color = TrafficLight.RED
+                nearest_tl_state = TrafficLight.RED
             elif label == 1:
-                nearest_tl_color = TrafficLight.YELLOW
+                nearest_tl_state = TrafficLight.YELLOW
             elif label == 2:
-                nearest_tl_color = TrafficLight.GREEN
+                nearest_tl_state = TrafficLight.GREEN
             else:
-                nearest_tl_color = TrafficLight.UNKNOWN
+                nearest_tl_state = TrafficLight.UNKNOWN
 
-            image = cv2.rectangle(image_bgr,(xmin,ymin),(xmax,ymax),colors[label])
+            #image = cv2.rectangle(image_bgr,(xmin,ymin),(xmax,ymax),colors[label])
 
-        return nearest_tl_color, 150/nearest_tl_width
+        state = "UNKNOWN"
+        if nearest_tl_state == TrafficLight.RED:
+            state = "RED"
+        elif nearest_tl_state == TrafficLight.YELLOW:
+            state = "YELLOW"
+        elif nearest_tl_state == TrafficLight.GREEN:
+            state = "GREEN"
+        rospy.loginfo("traffic signal state: %s"%state)
+
+        return nearest_tl_state, 150/nearest_tl_width
