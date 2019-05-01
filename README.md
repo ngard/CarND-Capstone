@@ -6,12 +6,6 @@ Preliminary submission to check behavior on Carla. (It is already working pretty
 
 This README is not completed yet. Description will be coming soon.
 
-### Member
-
-This team is my individual team.
-
-* Norihito Tohge (dimension8300@gmail.com)
-
 ### Usage
 
 1. Clone the project repository
